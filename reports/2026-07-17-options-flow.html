@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>期权流分析报告 - 2026-07-17</title>
+<style>
+:root{--bg:#09111a;--card:#111e2a;--line:#26394b;--text:#edf5fb;--muted:#91a4b7;--green:#44d18c;--red:#ff6b70;--yellow:#f5c85b;--cyan:#59d7ff}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.55}main{width:min(1180px,calc(100% - 28px));margin:auto;padding:34px 0 70px}a{color:var(--cyan)}.back{text-decoration:none;color:var(--muted);font-size:13px}h1{font-size:clamp(28px,5vw,46px);margin:18px 0 4px;letter-spacing:-.03em}.sub{color:var(--muted);margin-bottom:26px}.notice{padding:14px 17px;background:#2a2413;border:1px solid #5e4c1d;border-radius:12px;color:#f8dda0;margin-bottom:22px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px}table{width:100%;border-collapse:collapse;background:var(--card);min-width:980px}th,td{text-align:left;padding:12px 13px;border-bottom:1px solid var(--line);font-size:13px}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}tr:last-child td{border-bottom:0}.pos{color:var(--green);font-weight:700}.neg{color:var(--red);font-weight:700}.neutral{color:var(--yellow);font-weight:700}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-top:24px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:19px}.card h2{margin:0 0 4px;font-size:20px}.card .label{color:var(--muted);font-size:12px}.card p{margin:11px 0 0}.levels{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}.summary{margin-top:28px;padding:20px;background:linear-gradient(135deg,#112637,#101b27);border:1px solid #28445b;border-radius:16px}.summary h2{margin:0 0 10px}.summary ol{margin:0;padding-left:22px}.foot{color:var(--muted);font-size:12px;margin-top:28px}@media(max-width:760px){.cards{grid-template-columns:1fr}}
+</style></head><body><main>
+<a class="back" href="../">← 返回报告首页</a><h1>期权流分析报告</h1><div class="sub">2026-07-17 到期 · 周五盘前快照 · 数据源 Barchart</div>
+<div class="notice">数据说明：价格及 P/C 指标截至美东 2026-07-16 收盘附近；Gamma 数据为上一交易日收盘后更新。到期日已明确锁定为 2026-07-17（0 DTE）。</div>
+<div class="table-wrap"><table><thead><tr><th>标的</th><th>价格</th><th>Max Pain</th><th>偏离</th><th>Gamma Flip</th><th>Put / Call Wall</th><th>P/C量 / OI</th><th>IV Rank</th><th>结构判断</th></tr></thead><tbody>
+<tr><td>MSFT</td><td>401.10</td><td>390</td><td>+2.85%</td><td>377.32</td><td>400 / 400</td><td>0.31 / 0.44</td><td>98.55%</td><td class="pos">中性偏多</td></tr>
+<tr><td>NVDA</td><td>207.40</td><td>200</td><td>+3.70%</td><td>196.75</td><td>210 / 210</td><td>0.48 / 0.82</td><td>34.13%</td><td class="pos">中性偏多</td></tr>
+<tr><td>PLTR</td><td>134.44</td><td>129</td><td>+4.22%</td><td>125.41</td><td>135 / 135</td><td>0.43 / 0.89</td><td>68.67%</td><td class="pos">中性偏多</td></tr>
+<tr><td>TSLA</td><td>391.06</td><td>400</td><td>-2.24%</td><td>390.46</td><td>400 / 400</td><td>0.80 / 0.76</td><td>36.09%</td><td class="neutral">中性观察</td></tr>
+<tr><td>SPY</td><td>750.72</td><td>750</td><td>+0.10%</td><td>751.29</td><td>750 / 750</td><td>1.23 / 2.09</td><td>17.90%</td><td class="neutral">Pin / 中性</td></tr>
+<tr><td>QQQ</td><td>705.94</td><td>713</td><td>-0.99%</td><td>721.51</td><td>700 / 711</td><td>1.41 / 1.40</td><td>64.40%</td><td class="neg">偏空 / 高波动</td></tr>
+</tbody></table></div>
+<div class="cards">
+<article class="card"><h2>MSFT</h2><div class="label">正 Gamma · IV 极高</div><p>价格略高于 400 Wall，结构偏稳；IV Rank 98.55%，直接买期权的成本环境很差。</p><div class="levels">观察：400 能否守住</div></article>
+<article class="card"><h2>NVDA</h2><div class="label">正 Gamma · 临近 210 Wall</div><p>价格高于 Max Pain，但 210 是明显墙位。有效突破并守住 210 后结构才更有利。</p><div class="levels">支撑参考 200 · 突破观察 210</div></article>
+<article class="card"><h2>PLTR</h2><div class="label">正 Gamma · IV 偏高</div><p>距离 135 Wall 很近，方向略偏多，但较高 IV Rank 降低追买裸期权的赔率。</p><div class="levels">关键位 135</div></article>
+<article class="card"><h2>TSLA</h2><div class="label">Gamma 过渡区</div><p>距 Flip 仅约 0.15%，环境容易切换；400 同时是 Max Pain 与 Wall，未站上前保持中性。</p><div class="levels">结构分界 390.46 · 关键阻力 400</div></article>
+<article class="card"><h2>SPY</h2><div class="label">0 DTE Pin 风险高</div><p>价格、Max Pain 与 Wall 全部集中在 750，Flip 也非常接近，容易围绕 750 反复拉扯。</p><div class="levels">Pin 核心 750 · Flip 751.29</div></article>
+<article class="card"><h2>QQQ</h2><div class="label">负 Gamma · 偏空</div><p>价格低于 Flip 与 Max Pain，波动可能被放大；700 是重要支撑，跌破将触发更强防守警报。</p><div class="levels">支撑 700 · 阻力 711–713 · Flip 721.51</div></article>
+</div>
+<section class="summary"><h2>今日监控优先级</h2><ol><li>QQQ：700 是否跌破</li><li>TSLA：能否站上 400</li><li>NVDA：能否有效突破 210</li><li>SPY：是否脱离 750 Pin 区</li></ol></section>
+<p class="foot">本报告只用于结构化观察和风险过滤，不构成投资建议。0 DTE 风险极高，开仓前需结合实时价格、成交量、技术信号与止损计划。</p>
+</main></body></html>

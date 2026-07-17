@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="每周期权流结构分析与风险观察">
+  <title>期权流观察站</title>
+  <style>
+    :root{--bg:#081018;--panel:#101c28;--line:#233446;--text:#eef5fb;--muted:#91a4b7;--cyan:#59d7ff;--green:#43d18b;--yellow:#f4c95d}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 80% 0,#12314a 0,transparent 32rem),var(--bg);color:var(--text);font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;line-height:1.6}
+    main{width:min(1040px,calc(100% - 32px));margin:auto;padding:64px 0 80px}.eyebrow{color:var(--cyan);font-weight:700;letter-spacing:.14em;font-size:12px;text-transform:uppercase}h1{font-size:clamp(36px,7vw,72px);line-height:1.05;margin:12px 0 18px;letter-spacing:-.04em;max-width:780px}.lead{color:var(--muted);max-width:680px;font-size:17px;margin:0 0 44px}
+    .hero-card,.report-card{background:linear-gradient(145deg,rgba(20,37,52,.96),rgba(12,23,34,.96));border:1px solid var(--line);border-radius:20px}.hero-card{padding:28px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;box-shadow:0 20px 70px rgba(0,0,0,.25)}.tag{display:inline-flex;padding:5px 10px;border-radius:999px;background:rgba(67,209,139,.12);color:var(--green);font-size:12px;font-weight:700}.hero-card h2{margin:12px 0 5px;font-size:27px}.meta{color:var(--muted);font-size:14px}.button{display:inline-block;text-decoration:none;color:#061018;background:var(--cyan);font-weight:800;padding:12px 18px;border-radius:12px;white-space:nowrap}.button:hover{filter:brightness(1.08)}
+    section{margin-top:46px}.section-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:16px}.section-title h2{margin:0;font-size:22px}.section-title span{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.report-card{padding:22px;text-decoration:none;color:inherit;transition:.2s transform,.2s border-color}.report-card:hover{transform:translateY(-3px);border-color:var(--cyan)}.report-card h3{margin:9px 0 4px;font-size:19px}.report-card p{margin:0;color:var(--muted);font-size:14px}.old{color:var(--yellow)}footer{margin-top:55px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:22px}
+    @media(max-width:680px){main{padding-top:38px}.hero-card{grid-template-columns:1fr}.button{text-align:center}.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body><main>
+  <div class="eyebrow">Weekly Options Flow</div>
+  <h1>期权流观察站</h1>
+  <p class="lead">用 Max Pain、Gamma Flip、Call/Put Wall、P/C Ratio 与 IV Rank 观察当周期权结构。这里提供的是交易过滤与风险提示，不是独立开仓信号。</p>
+  <article class="hero-card">
+    <div><span class="tag">最新 · 0 DTE</span><h2>2026-07-17 六标的盘前分析</h2><div class="meta">MSFT · NVDA · PLTR · TSLA · SPY · QQQ</div></div>
+    <a class="button" href="reports/2026-07-17-options-flow.html">查看最新报告 →</a>
+  </article>
+  <section>
+    <div class="section-title"><h2>报告档案</h2><span>按日期倒序</span></div>
+    <div class="grid">
+      <a class="report-card" href="reports/2026-07-17-options-flow.html"><span class="tag">已锁定到期日</span><h3>2026-07-17</h3><p>六标的周五盘前结构快照</p></a>
+      <a class="report-card" href="reports/2026-07-06-options-flow.html"><span class="tag old">格式演示</span><h3>2026-07-06</h3><p>NVDA / TSLA；旧数据不用于交易判断</p></a>
+    </div>
+  </section>
+  <footer>数据来自 Barchart。期权数据可能延迟；请结合实时价格、成交量、技术信号和个人风险承受能力。</footer>
+</main></body></html>
