@@ -153,6 +153,11 @@
         <td>1000.00</td><td>900.00</td><td>868.41</td><td>0.70</td><td>1.13</td><td>36.08%</td>
         <td><span class="tag tag-pos">正Gamma(深度抑制)</span></td>
       </tr>
+      <tr>
+        <td class="ticker">SOXX</td><td>550.74</td><td>537.50</td><td class="tag tag-warn">+2.46%</td>
+        <td>600.00</td><td>500.00</td><td>531.14</td><td>1.19</td><td>1.26</td><td>41.61%</td>
+        <td><span class="tag tag-pos">正Gamma(抑制)</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -238,10 +243,30 @@
       </div>
     </div>
 
+    <div class="card">
+      <h2>SOXX <span class="price">550.74 <small style="color:var(--text-dim);">盘后552.30</small></span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain(08/14档)</div><div class="metric-value">537.50</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">531.14</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">600.00 / 500.00</div>
+        <div class="metric-label">P/C Volume Ratio</div><div class="metric-value">1.19</div>
+        <div class="metric-label">P/C OI Ratio</div><div class="metric-value">1.26</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">41.61%</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:55%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 531.14</span><span>正Gamma(抑制)</span></div>
+      <div class="flag-note">Call Wall(600)与Put Wall(500)都离现价较远（各约9%），今天两侧都没有临近阻力/支撑，Wall层面不构成日内主要约束。P/C Vol(1.19)与P/C OI(1.26)双双偏put，且方向与SMH的情绪背离不同——这里量比和仓位比一致，更像是真实的谨慎/对冲情绪，而不是单纯滞后指标。</div>
+      <div class="notes">
+        <div><b>Entry</b>正Gamma区，且与SMH同为半导体ETF、今天同向走强（+0.76%），可与SMH数据交叉验证板块一致性</div>
+        <div><b>Stop</b>跌破Gamma Flip 531.14</div>
+        <div><b>Target</b>Wall较远，日内不宜直接以600为目标，参考Max Pain 537.50上方的次级阻力更现实</div>
+      </div>
+    </div>
+
   </div>
 
   <div class="insight">
-    <b>本期观察</b>：四个标的今天全部处于正Gamma区间（现价均高于各自Gamma Flip Point），理论上属于"抑制型"交易日——做市商对冲行为会压制波动而非放大。QQQ贴近Call Wall（0.4%距离），触发框架的Wall临近警报，上方阻力值得重点关注。MU是今天唯一脱离期权结构逻辑的标的，是消息驱动的动能行情，期权指标在这里参考价值相对有限，需要更依赖技术面和消息面判断。SMH的P/C OI Ratio(2.01)与价格方向相反，是情绪指标滞后或对冲盘的典型例子，不构成独立交易信号。
+    <b>本期观察</b>：五个标的今天全部处于正Gamma区间（现价均高于各自Gamma Flip Point），理论上属于"抑制型"交易日——做市商对冲行为会压制波动而非放大。QQQ贴近Call Wall（0.4%距离），触发框架的Wall临近警报，上方阻力值得重点关注。MU是今天唯一脱离期权结构逻辑的标的，是消息驱动的动能行情，期权指标在这里参考价值相对有限，需要更依赖技术面和消息面判断。SMH与SOXX同属半导体ETF，今天同向走强（+0.73%/+0.76%），可互相印证板块级别的情绪，但两者P/C比值的"一致性"不同：SOXX量比与仓位比同步偏put（更像真实谨慎情绪），SMH则量比仓位比与价格方向背离（更像滞后/对冲盘），提醒同板块内部也不能把期权情绪指标一概而论。
   </div>
 
   <footer>
