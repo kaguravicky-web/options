@@ -158,6 +158,11 @@
         <td>600.00</td><td>500.00</td><td>531.14</td><td>1.19</td><td>1.26</td><td>41.61%</td>
         <td><span class="tag tag-pos">正Gamma(抑制)</span></td>
       </tr>
+      <tr>
+        <td class="ticker">ANET</td><td>203.62</td><td>195.00</td><td class="tag tag-warn">+4.42%</td>
+        <td>210.00</td><td>200.00</td><td>176.54</td><td>0.65</td><td>0.83</td><td>28.92%</td>
+        <td><span class="tag tag-pos">正Gamma(深度抑制)</span></td>
+      </tr>
     </tbody>
   </table>
 
@@ -263,10 +268,30 @@
       </div>
     </div>
 
+    <div class="card flagged">
+      <h2>ANET <span class="price">203.62 <small style="color:var(--red);">-3.27%</small> <small style="color:var(--green);">盘后204.80</small></span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain(08/14档)</div><div class="metric-value">195.00</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">176.54</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">210.00 / 200.00</div>
+        <div class="metric-label">P/C Volume Ratio</div><div class="metric-value">0.65</div>
+        <div class="metric-label">P/C OI Ratio</div><div class="metric-value">0.83</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">28.92%</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:81%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 176.54</span><span>正Gamma(抑制)</span></div>
+      <div class="flag-note">🔴 今天唯一下跌的标的（regular -3.27%），且现价203.62距Put Wall 200.00只有1.8%，触发框架"距Wall≤5%"防守规则——如果盘中进一步下探，跌破200附近的Put Wall可能启动助跌引擎。同时P/C Volume Ratio(0.65)按Barchart自身"低于0.7偏多"的经验法则显示call成交更活跃，与当天股价下跌方向背离，且盘后已经从203.62回升到204.80——多空信号本身就不统一，建议开盘后先观察方向再决定是否参与，不要单靠这份快照下判断</div>
+      <div class="notes">
+        <div><b>Entry</b>方向信号混杂（价格跌、期权量比偏多、盘后已回升），不满足框架清单里"技术面+期权结构一致"的过滤条件，今日暂不建议作为主动进攻标的</div>
+        <div><b>Stop</b>若已有仓位：跌破Put Wall 200.00 视为助跌信号；反向则关注Gamma Flip 176.54（距离较远，参考权重低于Wall）</div>
+        <div><b>Target</b>方向不明朗前不设目标，等待开盘后价格与量能进一步确认</div>
+      </div>
+    </div>
+
   </div>
 
   <div class="insight">
-    <b>本期观察</b>：五个标的今天全部处于正Gamma区间（现价均高于各自Gamma Flip Point），理论上属于"抑制型"交易日——做市商对冲行为会压制波动而非放大。QQQ贴近Call Wall（0.4%距离），触发框架的Wall临近警报，上方阻力值得重点关注。MU是今天唯一脱离期权结构逻辑的标的，是消息驱动的动能行情，期权指标在这里参考价值相对有限，需要更依赖技术面和消息面判断。SMH与SOXX同属半导体ETF，今天同向走强（+0.73%/+0.76%），可互相印证板块级别的情绪，但两者P/C比值的"一致性"不同：SOXX量比与仓位比同步偏put（更像真实谨慎情绪），SMH则量比仓位比与价格方向背离（更像滞后/对冲盘），提醒同板块内部也不能把期权情绪指标一概而论。
+    <b>本期观察</b>：六个标的（SMH/VOO/QQQ/MU/SOXX/ANET）今天全部处于正Gamma区间（现价均高于各自Gamma Flip Point），理论上都属于"抑制型"结构——做市商对冲行为会压制波动而非放大。但"正Gamma"不等于"今天不会有大波动"：ANET regular session照样跌了3.27%，说明结构性压制只影响做市商对冲带来的那部分波动，挡不住真实的消息面/资金面驱动。QQQ贴近Call Wall（0.4%距离）、ANET贴近Put Wall（1.8%距离），是今天两个触发框架Wall临近警报的标的，分别是上方阻力和下方支撑的临界点。MU是消息驱动的动能行情，期权指标参考价值相对有限。SMH与SOXX同属半导体ETF，今天同向走强，但两者P/C比值的"一致性"不同：SOXX量比与仓位比同步偏put，SMH则量比仓位比与价格方向背离，提醒同板块内部也不能把期权情绪指标一概而论。ANET是全天唯一的下跌标的，且期权量比(0.65)偏多、盘后价格已回升，多空信号本身不统一，是今天六个标的里最需要谨慎对待的一个。
   </div>
 
   <footer>
