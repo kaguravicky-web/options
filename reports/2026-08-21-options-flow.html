@@ -123,7 +123,7 @@
 <div class="container">
 
   <h1>期权流分析报告</h1>
-  <div class="subtitle">数据日期:2026-08-21(周五，本周到期日)｜ 数据来源:Barchart.com（Chrome插件直连读取，已用 <code>?expiration=2026-08-21-w</code> 锁定当日到期档）｜ 报价截至2026-08-20收盘 + 盘后更新（周五盘前抓取，尚未反映周五盘中走势）</div>
+  <div class="subtitle">数据日期:2026-08-21(周五，本周到期日)｜ 数据来源:moomoo API（本地OpenD，标的总览/逐档Greeks与OI）+ Barchart.com（Max Pain / Gamma Flip / Call-Put Wall，已用 <code>?expiration=2026-08-21-w</code> 锁定当日到期档）｜ Barchart部分报价截至2026-08-20收盘 + 盘后；moomoo部分为本次生成时的实时快照</div>
 
   <table class="overview">
     <thead>
@@ -265,6 +265,27 @@
     </div>
 
   </div>
+
+  <section style="margin-top:32px;">
+    <h2 style="font-size:18px;margin-bottom:12px;">moomoo补充数据与交叉验证（新增，本地API实时快照）</h2>
+    <table class="overview" style="margin-bottom:16px;">
+      <thead>
+        <tr><th>标的</th><th>P/C Vol(moomoo)</th><th>P/C OI(moomoo)</th><th>IV(moomoo)</th><th>IV Rank(moomoo)</th><th>HV30d</th><th>HV90d</th><th>HV365d</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="ticker">VOO</td><td>2.13</td><td>0.71</td><td>15.88%</td><td>24.25%</td><td>13.29%</td><td>13.78%</td><td>12.82%</td></tr>
+        <tr><td class="ticker">QQQ</td><td>1.32</td><td>1.21</td><td>23.45%</td><td>37.87%</td><td>22.85%</td><td>26.11%</td><td>19.61%</td></tr>
+        <tr><td class="ticker">HOOD</td><td>0.32</td><td>0.69</td><td>65.91%</td><td>34.03%</td><td>50.71%</td><td>69.98%</td><td>69.75%</td></tr>
+        <tr><td class="ticker">COIN</td><td>0.45</td><td>0.68</td><td>73.19%</td><td>49.19%</td><td>74.13%</td><td>68.27%</td><td>68.39%</td></tr>
+      </tbody>
+    </table>
+    <div class="flag-note" style="color:var(--yellow);background:rgba(210,153,34,0.08);border-color:rgba(210,153,34,0.3);">
+      VOO/HOOD/COIN 的P/C Ratio与Barchart数字几乎完全一致（交叉验证通过）。<b>QQQ的P/C Volume Ratio有明显差异</b>：moomoo实时快照显示1.32，Barchart（Thu 08/20收盘口径）显示1.75——OI比值两边接近（1.21 vs 1.18），差异集中在成交量统计口径或抓取时点不同，提醒不要机械平均两个数字，需要结合当前实际盘口判断。HOOD的IV(65.91%)远高于IV Rank(34.03%)所暗示的"相对不算最贵"，实际隐含波动率绝对水平仍然很高，适合短线但权利金成本不低。
+    </div>
+    <div class="insight">
+      <b>HOOD Wall交叉验证</b>：用moomoo逐行权价真实Gamma×OI手算，Call方向100档合计(gamma 0.051×OI 22,264≈1,131)高于95档(0.104×7,550≈786)，Put方向95档(0.104×8,564≈893)是区间最大值——分别对应Barchart给出的Call Wall 100.00、Put Wall 95.00，两个独立数据源在Wall位置上完全吻合，说明Barchart这两个衍生指标的方法论目前可信，继续沿用是合理的。
+    </div>
+  </section>
 
   <div class="insight">
     <b>本期观察</b>：今天最重要的信号是三个不同类型的标的——AMZN（个股）、VOO（大盘ETF）、HOOD（个股）——几乎同时精确卡在各自的Put Wall上（偏离都在0.15%以内），这种跨标的、跨类型的同步收敛不太可能是巧合，更像是大盘级别的风险偏好在这个时间点集中收缩到了结构性支撑位。QQQ是五个里唯一已经跌破Gamma Flip Point进入负Gamma（放大）区间的，意味着如果大盘继续走弱，QQQ的下跌可能比其他仍处正Gamma的标的更容易加速。COIN是完全独立于这个大盘弱势格局之外的强势标的（+7.58%），期权结构信号在这种消息驱动行情里参考价值有限。VOO的P/C Volume Ratio(2.13)是当天新增的极端put买盘，与其仓位比(0.71)差距很大，提示这更像是当天临时的避险行为而非既有仓位结构，值得开盘后持续跟踪是否延续。
