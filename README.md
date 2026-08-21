@@ -1,28 +1,51 @@
 # 期权流分析框架（Weekly Options Flow Framework）
 
-**数据来源**：Barchart.com（通过Chrome插件直连读取，免截图）
+**数据来源**：moomoo API（主力，本地OpenD网关）+ Barchart.com（仅Max Pain / Gamma Flip / Call-Put Wall两页）
 **范围**：短线账户持仓 + 当日重点关注标的
 **时间窗口**：当周到期（本周五）
 
 **每日报告**：[`reports/`](./reports) 目录下存放每次生成的带日期分析报告（HTML），命名格式 `{日期}-options-flow.html`。
 
-## 数据获取方式（已验证可行，2026-07-06）
+## 数据获取方式（已验证可行，2026-08-21起改为混合数据源）
 
-用Claude Code的Chrome插件导航到以下Barchart页面，用get_page_text直接提取文本即可拿到所有字段（无需登录付费会员，页面文本对免费账号可见）：
+### 主力数据源：moomoo API（本地，无每日次数限制）
+
+前提：`moomoo_OpenD.exe` 网关在本机运行，Python装有`moomoo_api`包，直连`127.0.0.1:11111`（无需浏览器/额度）。
+
+```python
+from moomoo import OpenQuoteContext, RET_OK, SubType
+ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
+```
+
+| 字段 | API调用 | 返回内容 |
+|------|---------|----------|
+| 标的总览（P/C Volume/OI、IV、IV Rank/Percentile、HV 30/60/90/120/365d及百分位） | `ctx.get_option_underlying_overview(code_list=['US.{TICKER}'])` | 一行DataFrame，字段名见下 |
+| 到期日列表 | `ctx.get_option_expiration_date(code='US.{TICKER}')` | 含`expiration_cycle`（WEEK/MONTH）区分周期权/月期权 |
+| 完整期权链（合约代码列表） | `ctx.get_option_chain(code='US.{TICKER}', start='{YYYY-MM-DD}', end='{YYYY-MM-DD}')` | 148档左右，仅含code/strike，无Greeks |
+| 逐行权价Greeks + OI + 成交量（**Barchart完全拿不到的数据**） | 先`ctx.subscribe(codes, [SubType.QUOTE])`，再`ctx.get_stock_quote(codes)` | delta/gamma/vega/theta/open_interest/implied_volatility/volume/premium，逐个行权价真实值 |
+
+标的总览字段名：`call_volume` `put_volume` `call_open_interest` `put_open_interest` `iv` `iv_rank` `iv_percentile` `pre_iv` `hv_30d`/`hv_60d`/`hv_90d`/`hv_120d`/`hv_365d`（各带`_percentile`）。
+
+**⚠️ 用完记得`ctx.unsubscribe(codes, [SubType.QUOTE])`和`ctx.close()`**，避免占用订阅额度。
+
+### 仍从Barchart拿的两项：Max Pain、Gamma Flip Point / Call Wall / Put Wall
+
+这两个是**加工过的衍生指标**（不是原始数据），moomoo没有现成字段，需要用逐行权价Gamma×OI按标准公式自己汇总计算——但公式的符号约定（谁被视为净空/净多）没有跟Barchart的黑箱结果交叉验证过，贸然自己算容易在判断方向上出错，风险比继续用Barchart的现成结果更大。**因此这两项继续从Barchart抓，其余全部改用moomoo**：
 
 | 字段 | 页面URL模式 | 示例返回 |
 |------|------------|----------|
 | Max Pain | `/stocks/quotes/{TICKER}/max-pain-chart?expiration={FRIDAY}-w` | "Max Pain: 745.00" |
-| Gamma环境 / Call Wall / Put Wall | `/stocks/quotes/{TICKER}/gamma-exposure?expiration={FRIDAY}-w` | "gamma flip point is 744.85"，"put wall is 750.00" |
-| P/C Ratio & Open Interest | `/stocks/quotes/{TICKER}/put-call-ratios` | Put/Call Volume Ratio、Put/Call OI Ratio、IV/HV/IV Rank |
+| Gamma Flip Point / Call Wall / Put Wall | `/stocks/quotes/{TICKER}/gamma-exposure?expiration={FRIDAY}-w` | "gamma flip point is 744.85"，"put wall is 750.00" |
 
-**⚠️⚠️ 必须锁定到期日（重大修正 2026-07-06）**：Max Pain页面默认显示的是**最近到期日**（可能是当天0DTE），Gamma Exposure页面默认聚合**未来4个到期日**——两者默认都不是"本周五"单独的数据。必须在URL后拼接 `?expiration=YYYY-MM-DD-w`（如周五是2026-07-10，就是`?expiration=2026-07-10-w`），否则拿到的是错的到期日或被稀释的聚合值。P/C Ratio页面本身按"当日成交/累计持仓"统计，不受到期日选择影响，可以不加参数。
+**⚠️⚠️ 必须锁定到期日**：两个页面默认都不是"本周五"单独的数据（Max Pain默认最近到期日/可能是0DTE，Gamma Exposure默认聚合未来4个到期日）。必须在URL后拼接 `?expiration=YYYY-MM-DD-w`（如周五是2026-08-21，就是`?expiration=2026-08-21-w`）。
 
 **⚠️ 路径区别**：个股用 `/stocks/quotes/{TICKER}/...`，ETF用 `/etfs-funds/quotes/{TICKER}/...`。
 
-**⚠️ 免费账号限制**：Barchart免费账号每天限20次页面浏览，每个标的约3次，即约6-7个标的/天。
+**⚠️ 免费账号限制**：Barchart免费账号每天限20次页面浏览。改用混合数据源后每个标的只需2次（Max Pain + Gamma Exposure，P/C Ratio页不再需要，已被moomoo标的总览取代），额度压力比之前的3次/标的降低约三分之一。
 
-**❌ Maxpain.com已失效**：域名停放待售，已移除。
+**❌ Maxpain.com已失效**：域名停放待售，已移除（不影响，Max Pain现走Barchart）。
+
+**未来可选优化**：用moomoo原始Gamma×OI数据自己复刻Max Pain/Gamma Flip计算，跟Barchart当天数字交叉验证若干次、确认公式方向正确后，再考虑完全脱离Barchart。这一步尚未开始。
 
 **Options Prices / Volatility & Greeks页面**（逐行权价明细表）：纯文本提取拿不到网格数据，如需明细仍需截图。
 
