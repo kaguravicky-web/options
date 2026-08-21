@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>期权流分析报告 - 2026-08-21</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --card-bg: #1a2129;
+    --border: #2a333d;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --green: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+    --blue: #58a6ff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    margin: 0;
+    padding: 24px;
+    line-height: 1.5;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .subtitle { color: var(--text-dim); font-size: 13px; margin-bottom: 24px; }
+
+  table.overview {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 32px;
+    font-size: 13px;
+  }
+  table.overview th, table.overview td {
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+  table.overview th {
+    background: var(--card-bg);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  table.overview td.ticker { font-weight: 700; text-align: left; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tag-pos { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag-neg { background: rgba(63,185,80,0.15); color: var(--green); }
+  .tag-warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .tag-neutral { background: rgba(139,148,158,0.15); color: var(--text-dim); }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .card.flagged { border-color: rgba(248,81,73,0.5); }
+  .card h2 { font-size: 17px; margin: 0 0 12px 0; display: flex; justify-content: space-between; align-items: baseline; }
+  .card h2 .price { font-size: 14px; color: var(--text-dim); font-weight: 400; }
+
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 13px; margin-bottom: 14px; }
+  .metric-label { color: var(--text-dim); }
+  .metric-value { font-weight: 600; text-align: right; }
+
+  .gamma-bar {
+    position: relative;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(to right, var(--green) 0%, var(--border) 50%, var(--red) 100%);
+    margin: 10px 0 6px 0;
+  }
+  .gamma-marker {
+    position: absolute;
+    top: -4px;
+    width: 2px;
+    height: 14px;
+    background: var(--text);
+  }
+  .gamma-caption { font-size: 11px; color: var(--text-dim); display: flex; justify-content: space-between; }
+
+  .notes { font-size: 13px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
+  .notes div { margin-bottom: 4px; }
+  .notes b { color: var(--text-dim); font-weight: 600; margin-right: 6px; }
+
+  .flag-note {
+    font-size: 12px;
+    color: var(--red);
+    background: rgba(248,81,73,0.08);
+    border: 1px solid rgba(248,81,73,0.3);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-top: 10px;
+  }
+
+  .insight {
+    background: rgba(88,166,255,0.08);
+    border: 1px solid rgba(88,166,255,0.3);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  .insight b { color: var(--blue); }
+
+  footer { color: var(--text-dim); font-size: 11px; margin-top: 32px; border-top: 1px solid var(--border); padding-top: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>期权流分析报告</h1>
+  <div class="subtitle">数据日期:2026-08-21(周五，本周到期日)｜ 数据来源:Barchart.com（Chrome插件直连读取，已用 <code>?expiration=2026-08-21-w</code> 锁定当日到期档）｜ 报价截至2026-08-20收盘 + 盘后更新（周五盘前抓取，尚未反映周五盘中走势）</div>
+
+  <table class="overview">
+    <thead>
+      <tr>
+        <th>标的</th><th>当前价</th><th>Max Pain</th><th>偏离</th>
+        <th>Call Wall</th><th>Put Wall</th><th>Gamma Flip</th><th>P/C Vol</th><th>P/C OI</th>
+        <th>IV Rank</th><th>Gamma环境</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="ticker">AMZN</td><td>260.11 <span style="color:var(--red);font-size:11px;">-2.16%</span></td><td>252.50</td><td class="tag tag-warn">+3.01%</td>
+        <td>270.00</td><td>260.00</td><td>244.73</td><td>0.45</td><td>0.66</td><td>23.83%</td>
+        <td><span class="tag tag-pos">正Gamma(抑制)</span></td>
+      </tr>
+      <tr>
+        <td class="ticker">VOO</td><td>701.01 <span style="color:var(--red);font-size:11px;">-0.83%</span></td><td>705.00</td><td class="tag tag-neutral">-0.57%</td>
+        <td>710.00</td><td>700.00</td><td>635.05</td><td>2.13</td><td>0.71</td><td>15.10%</td>
+        <td><span class="tag tag-pos">正Gamma(深度抑制)</span></td>
+      </tr>
+      <tr>
+        <td class="ticker">QQQ</td><td>710.93 <span style="color:var(--red);font-size:11px;">-0.72%</span></td><td>715.00</td><td class="tag tag-neutral">-0.57%</td>
+        <td>720.00</td><td>700.00</td><td>718.41</td><td>1.75</td><td>1.18</td><td>36.47%</td>
+        <td><span class="tag tag-neg">负Gamma(放大)</span></td>
+      </tr>
+      <tr>
+        <td class="ticker">HOOD</td><td>95.10 <span style="color:var(--red);font-size:11px;">-0.70%</span></td><td>94.00</td><td class="tag tag-warn">+1.17%</td>
+        <td>100.00</td><td>95.00</td><td>93.12</td><td>0.32</td><td>0.69</td><td>30.00%</td>
+        <td><span class="tag tag-pos">正Gamma(抑制)</span></td>
+      </tr>
+      <tr>
+        <td class="ticker">COIN</td><td>172.35 <span style="color:var(--green);font-size:11px;">+7.58%</span></td><td>152.50</td><td class="tag tag-warn">+13.02%</td>
+        <td>175.00</td><td>160.00</td><td>147.59</td><td>0.45</td><td>0.68</td><td>44.84%</td>
+        <td><span class="tag tag-pos">正Gamma(深度抑制)</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="cards">
+
+    <div class="card flagged">
+      <h2>AMZN <span class="price">260.11 <small style="color:var(--red);">-2.16%</small></span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain(08/21档)</div><div class="metric-value">252.50</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">244.73</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">270.00 / 260.00</div>
+        <div class="metric-label">P/C Volume Ratio</div><div class="metric-value">0.45</div>
+        <div class="metric-label">P/C OI Ratio</div><div class="metric-value">0.66</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">23.83%</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:60%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 244.73</span><span>正Gamma(抑制)</span></div>
+      <div class="flag-note">🔴 现价260.11几乎精确等于Put Wall(260.00)，距离仅0.04%——今天离Wall最近的标的。虽然仍处正Gamma区（距Flip Point还有6.3%缓冲），但一旦跌破260，本身就是"助跌引擎启动"的经典场景</div>
+      <div class="notes">
+        <div><b>Entry</b>不建议现在追空或抄底，等开盘后价格对260.00的反应（站稳/跌破）确认方向</div>
+        <div><b>Stop</b>若做多：跌破Put Wall 260.00；若做空：反弹站稳260.00上方</div>
+        <div><b>Target</b>下探目标关注Max Pain以下缺乏支撑区间；上行目标Call Wall 270.00</div>
+      </div>
+    </div>
+
+    <div class="card flagged">
+      <h2>VOO <span class="price">701.01 <small style="color:var(--red);">-0.83%</small></span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain(08/21档)</div><div class="metric-value">705.00</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">635.05</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">710.00 / 700.00</div>
+        <div class="metric-label">P/C Volume Ratio</div><div class="metric-value">2.13</div>
+        <div class="metric-label">P/C OI Ratio</div><div class="metric-value">0.71</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">15.10%</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:84%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 635.05</span><span>正Gamma(抑制)</span></div>
+      <div class="flag-note">🔴 现价701.01距Put Wall(700.00)仅0.14%，同样是贴线状态。P/C Volume Ratio飙到2.13，是今天五个标的里最极端的put倾向，量比与仓位比（0.71）差距很大，说明是当天新增的大量买put行为，而不是长期持仓结构，值得关注是不是有对冲/避险需求集中在今天出现</div>
+      <div class="notes">
+        <div><b>Entry</b>深度正Gamma区（距Flip还有10%），结构上仍属抑制型，但贴近Put Wall+当日暴增的put量比方向一致偏空，两个信号叠加，谨慎看待</div>
+        <div><b>Stop</b>跌破Put Wall 700.00 视为助跌确认</div>
+        <div><b>Target</b>Max Pain 705.00 是到期前的引力位，若企稳可看回补</div>
+      </div>
+    </div>
+
+    <div class="card flagged">
+      <h2>QQQ <span class="price">710.93 <small style="color:var(--red);">-0.72%</small></span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain(08/21档)</div><div class="metric-value">715.00</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">718.41</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">720.00 / 700.00</div>
+        <div class="metric-label">P/C Volume Ratio</div><div class="metric-value">1.75</div>
+        <div class="metric-label">P/C OI Ratio</div><div class="metric-value">1.18</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">36.47%</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:47%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 718.41</span><span>正Gamma(抑制)</span></div>
+      <div class="flag-note">🔴 今天唯一已经跌破Gamma Flip Point进入负Gamma区的标的（现价710.93 vs Flip 718.41），意味着做市商对冲行为会放大而非压制接下来的波动。同时P/C Volume Ratio 1.75也是明显的put主导。距Put Wall 700.00还有1.5%缓冲，是今天下一个观察点</div>
+      <div class="notes">
+        <div><b>Entry</b>负Gamma+put主导，如果继续下探，跌破700的Put Wall可能触发加速；不建议在这个环境下逆势抄底</div>
+        <div><b>Stop</b>反向站回Gamma Flip 718.41上方视为环境切换回正Gamma</div>
+        <div><b>Target</b>下行关注Put Wall 700.00是否被击穿</div>
+      </div>
+    </div>
+
+    <div class="card flagged">
+      <h2>HOOD <span class="price">95.10 <small style="color:var(--red);">-0.70%</small></span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain(08/21档)</div><div class="metric-value">94.00</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">93.12</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">100.00 / 95.00</div>
+        <div class="metric-label">P/C Volume Ratio</div><div class="metric-value">0.32</div>
+        <div class="metric-label">P/C OI Ratio</div><div class="metric-value">0.69</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">30.00%</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:63%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 93.12</span><span>正Gamma(抑制)</span></div>
+      <div class="flag-note">🔴 现价95.10距Put Wall(95.00)仅0.11%，是今天第三个贴线标的，且距Gamma Flip Point(93.12)也只有2.1%——三个标的（AMZN/VOO/HOOD）同时精确卡在各自Put Wall上，是今天最值得注意的跨标的结构性现象，可能反映大盘级别的风险偏好同步收缩，而不是单一标的的独立事件。同时P/C Volume Ratio仅0.32，期权成交本身仍然偏call，情绪指标与价格方向不一致</div>
+      <div class="notes">
+        <div><b>Entry</b>Wall+Flip双重临界点，且情绪指标（call主导）与价格方向（下跌）背离，方向不明朗，等待开盘确认</div>
+        <div><b>Stop</b>跌破Put Wall 95.00 且同时跌破Gamma Flip 93.12，双重确认后果断离场</div>
+        <div><b>Target</b>企稳可看Max Pain 94.00附近或以上</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>COIN <span class="price">172.35 <small style="color:var(--green);">+7.58%</small></span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain(08/21档)</div><div class="metric-value">152.50</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">147.59</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">175.00 / 160.00</div>
+        <div class="metric-label">P/C Volume Ratio</div><div class="metric-value">0.45</div>
+        <div class="metric-label">P/C OI Ratio</div><div class="metric-value">0.68</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">44.84%（IV 69.81%）</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:83%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 147.59</span><span>正Gamma(抑制)</span></div>
+      <div class="flag-note">今天唯一逆势大涨的标的（+7.58%），且是五个里离Max Pain偏离最大的（+13.02%），理论到期引力最强，但这是明显的消息/资金驱动行情（涨幅量级不是期权结构能解释的），期权指标在这里参考权重应该降低。现价距Call Wall(175.00)只有1.5%，如果延续涨势，Call Wall是第一道阻力</div>
+      <div class="notes">
+        <div><b>Entry</b>动能行情为主，Gamma/Max Pain作为参考而非主判据，重点看能否放量突破Call Wall 175.00</div>
+        <div><b>Stop</b>跌破Gamma Flip 147.59 视为动能衰竭（距离较远，实际操作中应设更紧的价格止损）</div>
+        <div><b>Target</b>Call Wall 175.00，突破后关注是否有新的gamma挤压空间</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="insight">
+    <b>本期观察</b>：今天最重要的信号是三个不同类型的标的——AMZN（个股）、VOO（大盘ETF）、HOOD（个股）——几乎同时精确卡在各自的Put Wall上（偏离都在0.15%以内），这种跨标的、跨类型的同步收敛不太可能是巧合，更像是大盘级别的风险偏好在这个时间点集中收缩到了结构性支撑位。QQQ是五个里唯一已经跌破Gamma Flip Point进入负Gamma（放大）区间的，意味着如果大盘继续走弱，QQQ的下跌可能比其他仍处正Gamma的标的更容易加速。COIN是完全独立于这个大盘弱势格局之外的强势标的（+7.58%），期权结构信号在这种消息驱动行情里参考价值有限。VOO的P/C Volume Ratio(2.13)是当天新增的极端put买盘，与其仓位比(0.71)差距很大，提示这更像是当天临时的避险行为而非既有仓位结构，值得开盘后持续跟踪是否延续。
+  </div>
+
+  <footer>
+    本报告由 Barchart.com 公开页面文本抓取生成（已用 ?expiration=2026-08-21-w 锁定当日到期档，数据为2026-08-20收盘+盘后快照，周五盘前生成，尚未反映周五盘中走势），仅供个人研究参考，不构成投资建议。生成时间：2026-08-21。
+  </footer>
+
+</div>
+</body>
+</html>
