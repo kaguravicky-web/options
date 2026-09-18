@@ -23,6 +23,7 @@ ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
 | 到期日列表 | `ctx.get_option_expiration_date(code='US.{TICKER}')` | 含`expiration_cycle`（WEEK/MONTH）区分周期权/月期权 |
 | 完整期权链（合约代码列表） | `ctx.get_option_chain(code='US.{TICKER}', start='{YYYY-MM-DD}', end='{YYYY-MM-DD}')` | 148档左右，仅含code/strike，无Greeks |
 | 逐行权价Greeks + OI + 成交量（**Barchart完全拿不到的数据**） | 先`ctx.subscribe(codes, [SubType.QUOTE])`，再`ctx.get_stock_quote(codes)` | delta/gamma/vega/theta/open_interest/implied_volatility/volume/premium，逐个行权价真实值 |
+| 同上，**不占订阅额度**（2026-09-18起用这个拉整条单档链） | `ctx.get_market_snapshot(codes)`，每次≤400个代码 | `option_open_interest` `option_gamma` `option_delta` `option_implied_volatility` `option_strike_price` `option_type` + `last_price` |
 
 标的总览字段名：`call_volume` `put_volume` `call_open_interest` `put_open_interest` `iv` `iv_rank` `iv_percentile` `pre_iv` `hv_30d`/`hv_60d`/`hv_90d`/`hv_120d`/`hv_365d`（各带`_percentile`）。
 
@@ -37,7 +38,15 @@ ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
 | Max Pain | `/stocks/quotes/{TICKER}/max-pain-chart?expiration={FRIDAY}-w` | "Max Pain: 745.00" |
 | Gamma Flip Point / Call Wall / Put Wall | `/stocks/quotes/{TICKER}/gamma-exposure?expiration={FRIDAY}-w` | "gamma flip point is 744.85"，"put wall is 750.00" |
 
-**⚠️⚠️ 必须锁定到期日**：两个页面默认都不是"本周五"单独的数据（Max Pain默认最近到期日/可能是0DTE，Gamma Exposure默认聚合未来4个到期日）。必须在URL后拼接 `?expiration=YYYY-MM-DD-w`（如周五是2026-08-21，就是`?expiration=2026-08-21-w`）。
+**⚠️⚠️ 必须锁定到期日**：两个页面默认都不是"本周五"单独的数据（Max Pain默认最近到期日/可能是0DTE，Gamma Exposure图表默认聚合未来4个到期日）。必须在URL后拼接 `?expiration=YYYY-MM-DD-w`（如周五是2026-08-21，就是`?expiration=2026-08-21-w`）。**月度到期日（每月第三个周五）后缀是 `-m`**，如 `?expiration=2026-09-18-m`；以 moomoo `get_option_expiration_date` 返回的 `expiration_cycle`（WEEK→`-w`，MONTH→`-m`）为准，抓完看一眼下拉框选中的是不是当天。
+
+**⚠️⚠️ 2026-09-18 核对页面原文后的更正**：
+1. **Gamma Flip / Call Wall / Put Wall 锁不住到期日。** 页面原文："The gamma flip point, and call and put wall, are based on aggregate gamma exposure across all contracts"——全部到期日汇总，OI 截至上一交易日收盘。`?expiration=` 只影响 Max Pain 和 Gamma 图表。以前报告里的 Flip / Wall 都是这个口径。要看**当天到期档**的 Gamma 集中在哪，用 moomoo 单档自算（见下）。
+2. **Barchart 的 Max Pain 大概率只算现价上下 20 档**（页面默认 "20 Strikes +/-"）。9/18 QQQ：全链算 700，限 ±20 档算 710 = Barchart。AMZN、COIN 两种算法一致。赔付曲线底部平的时候两种口径会差开（HOOD 105 vs 107、VOO 670 vs 690），这种标的的 Max Pain 本身不尖锐，别当精确价位。
+3. **moomoo 单档复算**（`get_option_chain` 取当天到期的合约代码 → `get_market_snapshot` 取 OI / Gamma）：
+   - Max Pain = 让全部 call + put 到期内在价值之和（OI × 实值额）最小的行权价
+   - 当天 Gamma 峰 = Gamma × OI 最大的行权价（call、put 分开取）；到期当天 Gamma 集中在平值附近，这基本就是最可能被"钉住"的价位
+   - 预期波幅 = 前一日收盘时当天到期的平值跨式（call + put）价格，按现价在相邻两档之间插值
 
 **⚠️ 路径区别**：个股用 `/stocks/quotes/{TICKER}/...`，ETF用 `/etfs-funds/quotes/{TICKER}/...`。
 
@@ -45,7 +54,7 @@ ctx = OpenQuoteContext(host='127.0.0.1', port=11111)
 
 **❌ Maxpain.com已失效**：域名停放待售，已移除（不影响，Max Pain现走Barchart）。
 
-**未来可选优化**：用moomoo原始Gamma×OI数据自己复刻Max Pain/Gamma Flip计算，跟Barchart当天数字交叉验证若干次、确认公式方向正确后，再考虑完全脱离Barchart。这一步尚未开始。
+**未来可选优化**：用moomoo原始Gamma×OI数据自己复刻Max Pain/Gamma Flip计算，跟Barchart当天数字交叉验证若干次、确认公式方向正确后，再考虑完全脱离Barchart。**进度（2026-09-18）**：Max Pain 已复刻并对上（AMZN、COIN 一致；QQQ 限 ±20 档后一致）；Gamma Flip 还没做（需要按假设价位重算 Gamma，工作量更大）。
 
 ## ⚠️ 两套不同机制，不要混着讲（2026-08-21新增）
 
