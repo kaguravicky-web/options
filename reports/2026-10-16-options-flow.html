@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>期权流分析报告 - 2026-10-16</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --card-bg: #1a2129;
+    --border: #2a333d;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --green: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+    --blue: #58a6ff;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; margin: 0; padding: 24px; line-height: 1.5; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .subtitle { color: var(--text-dim); font-size: 13px; margin-bottom: 20px; }
+  .table-wrap { overflow-x: auto; margin-bottom: 28px; }
+  table.overview { width: 100%; min-width: 1080px; border-collapse: collapse; font-size: 13px; }
+  table.overview th, table.overview td { padding: 10px 8px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
+  table.overview th { background: var(--card-bg); color: var(--text-dim); font-weight: 600; font-size: 11px; letter-spacing: 0.3px; }
+  table.overview td.ticker { font-weight: 700; text-align: left; }
+  .up { color: var(--green); font-size: 11px; }
+  .down { color: var(--red); font-size: 11px; }
+  .dim { color: var(--text-dim); font-size: 11px; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+  .tag-pos { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag-neg { background: rgba(63,185,80,0.15); color: var(--green); }
+  .tag-warn { background: rgba(210,153,34,0.15); color: var(--yellow); }
+  .tag-neutral { background: rgba(139,148,158,0.15); color: var(--text-dim); }
+  .verdict { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.3); border-radius: 8px; padding: 14px 18px 6px; font-size: 13.5px; margin-bottom: 24px; }
+  .verdict h2 { font-size: 15px; margin: 0 0 8px; color: var(--blue); }
+  .verdict ul { margin: 0; padding-left: 18px; }
+  .verdict li { margin-bottom: 8px; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; }
+  .card.flagged { border-color: rgba(248,81,73,0.5); }
+  .card h2 { font-size: 17px; margin: 0 0 12px 0; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .card h2 .price { font-size: 13px; color: var(--text-dim); font-weight: 400; text-align: right; }
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 13px; margin-bottom: 14px; }
+  .metric-label { color: var(--text-dim); }
+  .metric-value { font-weight: 600; text-align: right; }
+  .gamma-bar { position: relative; height: 6px; border-radius: 3px; background: linear-gradient(to right, var(--green) 0%, var(--border) 50%, var(--red) 100%); margin: 10px 0 6px 0; }
+  .gamma-marker { position: absolute; top: -4px; width: 2px; height: 14px; background: var(--text); }
+  .gamma-caption { font-size: 11px; color: var(--text-dim); display: flex; justify-content: space-between; }
+  .notes { font-size: 13px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
+  .notes div { margin-bottom: 4px; }
+  .notes b { color: var(--text-dim); font-weight: 600; margin-right: 6px; }
+  .flag-note { font-size: 12px; color: var(--yellow); background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.3); border-radius: 6px; padding: 8px 10px; margin-top: 10px; }
+  .method { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px 6px; font-size: 13px; margin-top: 8px; }
+  .method h2 { font-size: 15px; margin: 0 0 8px; }
+  .method ol { margin: 0; padding-left: 20px; }
+  .method li { margin-bottom: 8px; }
+  code { font-size: 12px; color: var(--blue); }
+  footer { color: var(--text-dim); font-size: 11px; margin-top: 32px; border-top: 1px solid var(--border); padding-top: 12px; }
+  @media (max-width: 760px) { body { padding: 16px; } .cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>期权流分析报告</h1>
+  <div class="subtitle">数据日期：2026-10-16（周五，10 月月度到期日）｜ 标的池：AMZN · SPY · QQQ · HOOD · COIN（SPY 取代 VOO）｜ 数据来源：moomoo API（本地 OpenD）——全链 Gamma Flip / Call-Put Wall、10/16 单档 Max Pain / Gamma 峰 / 预期波幅、P/C、IV 全部用 moomoo 持仓量自算，本期不再取 Barchart｜ 价格：10/15 收盘；取数时间美东 10/16 00:30</div>
+
+  <div class="verdict">
+    <h2>今日判断</h2>
+    <ul>
+      <li><b>指数在翻转点下方，但今天到期的 Gamma 正好压在现价上</b>：SPY 收 771.79，在 Flip 775.1 下方 0.43%；QQQ 收 728.00，在 Flip 740.8 下方 1.73%，两只都是负 Gamma。但 10/16 这一档的 Gamma 峰是 SPY 772、QQQ 730，跟现价只差 0.03% / 0.27%，基本情形是今天被钉在这两个价附近。</li>
+      <li><b>SPY 往上的关键是 775</b>：Flip、Call Wall 和当天 call Gamma 峰都在 775，在今天的预期波幅上沿 776.0 之内，够得着。收回 775 就转成正 Gamma；守在 772 下方仍是放大环境。</li>
+      <li><b>CTA 今天大概率不动</b>：SPY / QQQ 三个信号都是多，最近的触发位是 760.69 / 716.20（−1.44% / −1.62%），都在今天的预期波幅之外。</li>
+      <li><b>COIN 是到期最敏感的一只</b>：昨天 +6.32%，10/16 这一档占它全部 Gamma 的 56%。今天看 180–185 的箱体（Put Wall / Call Wall 分别也是当天两边的 Gamma 峰）；Max Pain 177.5 刚好落在预期波幅下沿 177.8 附近，要跌到那里得走满一整个预期波幅。</li>
+      <li><b>HOOD 踩在翻转点上</b>：收 103.99，Flip 103.8，只高 0.18%。105 是 Put Wall，也是今天 call 和 put 两边的 Gamma 峰（+0.97%）；Max Pain 107 在预期上沿 107.2 附近，到期引力向上。跌回 103.8 下方就进入负 Gamma。</li>
+      <li><b>AMZN 看 255</b>：正 Gamma（高出 Flip 4.0%），255 是当天 put Gamma 峰，也是 ±20 档的 Max Pain，现价只差 0.09%；260 的 Call Wall 在预期上沿 258.3 之外，今天大概率够不着。</li>
+      <li><b>今天收盘后月度档到期</b>：它占各标的 Gamma 的 32%–56%（COIN 最高）。下周一的 Flip / Wall 要重算。</li>
+    </ul>
+  </div>
+
+  <div class="table-wrap">
+  <table class="overview">
+    <thead>
+      <tr>
+        <th>标的</th><th>10/15 收盘</th><th>Max Pain（全链 / ±20档）</th><th>现价偏离</th>
+        <th>Call Wall</th><th>Put Wall</th><th>Gamma Flip</th><th>10/16 Gamma 峰</th>
+        <th>预期波幅</th><th>P/C Vol</th><th>P/C OI</th><th>IV Rank</th><th>Gamma 环境</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="ticker">AMZN</td><td>254.76 <span class="up">+0.27%</span></td>
+        <td>252.5 / 255</td><td><span class="tag tag-neutral">+0.90% / −0.09%</span></td>
+        <td>260</td><td>250</td><td>244.9</td><td>call 260 / put 255</td>
+        <td>±1.38%</td><td>0.42</td><td>0.70</td><td>56.2%</td>
+        <td><span class="tag tag-pos">正Gamma(抑制)</span></td>
+      </tr>
+      <tr>
+        <td class="ticker">SPY</td><td>771.79 <span class="up">+0.28%</span></td>
+        <td>770 / 772</td><td><span class="tag tag-neutral">+0.23% / −0.03%</span></td>
+        <td>775</td><td>772</td><td>775.1</td><td>call 775 / put 772</td>
+        <td>±0.55%</td><td>1.17</td><td>2.26</td><td>17.4%</td>
+        <td><span class="tag tag-neg">负Gamma(放大)</span></td>
+      </tr>
+      <tr>
+        <td class="ticker">QQQ</td><td>728.00 <span class="down">−0.13%</span></td>
+        <td>732 / 734</td><td><span class="tag tag-neutral">−0.55% / −0.82%</span></td>
+        <td>730</td><td>725</td><td>740.8</td><td>730（两边同档）</td>
+        <td>±0.91%</td><td>1.11</td><td>1.47</td><td>33.6%</td>
+        <td><span class="tag tag-neg">负Gamma(放大)</span></td>
+      </tr>
+      <tr>
+        <td class="ticker">HOOD</td><td>103.99 <span class="up">+2.88%</span></td>
+        <td>107 / 107</td><td><span class="tag tag-warn">−2.81%</span></td>
+        <td>110</td><td>105</td><td>103.8</td><td>105（两边同档）</td>
+        <td>±3.05%</td><td>0.45</td><td>0.72</td><td>44.2%</td>
+        <td><span class="tag tag-warn">过渡区(±1%内)</span></td>
+      </tr>
+      <tr>
+        <td class="ticker">COIN</td><td>183.81 <span class="up">+6.32%</span></td>
+        <td>177.5 / 177.5</td><td><span class="tag tag-warn">+3.55%</span></td>
+        <td>185</td><td>180</td><td>173.0</td><td>call 185 / put 180</td>
+        <td>±3.28%</td><td>0.64</td><td>0.86</td><td>43.9%</td>
+        <td><span class="tag tag-pos">正Gamma(抑制)</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <h2>AMZN <span class="price">收 254.76 · +0.27%</span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain（10/16 档）</div><div class="metric-value">全链 252.5 / ±20档 255</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">244.9（现价 +4.03%）</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">260 / 250</div>
+        <div class="metric-label">10/16 Gamma 峰</div><div class="metric-value">call 260 / put 255</div>
+        <div class="metric-label">预期波幅（10/16）</div><div class="metric-value">±1.38% → 251.24–258.28</div>
+        <div class="metric-label">P/C Vol / OI</div><div class="metric-value">0.42 / 0.70</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">56.2%（IV 41.6%，HV30 23.8%）</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:90%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 244.9</span><span>正Gamma(抑制)</span></div>
+      <div class="flag-note">252.5–255 之间赔付曲线是平底（两个价位总赔付相同），所以 Max Pain 是一段区域，不是一个点。255 同时是当天 put Gamma 峰，现价 254.76 就贴在上面。IV 41.6% 远高于 30 天实际波动 23.8%，是因为 30 天 IV 已经包含 10/29 财报，不是今天的风险定价。</div>
+      <div class="notes">
+        <div><b>Entry</b>正 Gamma，回踩 252.5–255 区域企稳再考虑，不追 258 以上</div>
+        <div><b>Stop</b>跌破 Put Wall 250（也在预期下沿 251.2 之外）</div>
+        <div><b>Target</b>258.3（预期上沿）；260 Call Wall 今天大概率够不着</div>
+      </div>
+    </div>
+
+    <div class="card flagged">
+      <h2>SPY <span class="price">收 771.79 · +0.28%</span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain（10/16 档）</div><div class="metric-value">全链 770 / ±20档 772</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">775.1（现价 −0.43%）</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">775 / 772</div>
+        <div class="metric-label">10/16 Gamma 峰</div><div class="metric-value">call 775 / put 772</div>
+        <div class="metric-label">预期波幅（10/16）</div><div class="metric-value">±0.55% → 767.55–776.03</div>
+        <div class="metric-label">CTA 最近触发位</div><div class="metric-value">760.69（−1.44%，三信号全多，敞口 +1.04）</div>
+        <div class="metric-label">P/C Vol / OI</div><div class="metric-value">1.17 / 2.26</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">17.4%（IV 16.1%，HV30 10.0%）</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:46%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 775.1</span><span>正Gamma(抑制)</span></div>
+      <div class="flag-note">🔴 两条线把今天夹住：下面是 772（Put Wall、当天 put Gamma 峰、±20 档 Max Pain，现价只差 0.03%），上面是 775（Flip、Call Wall、当天 call Gamma 峰）。10/16 这一档占 SPY 全部 Gamma 的 37%，钉住效应会很强。775 在预期上沿 776 之内，是今天唯一可能翻成正 Gamma 的位置。P/C OI 2.26 偏 put，这是指数的常态（对冲盘），情绪权重低。</div>
+      <div class="notes">
+        <div><b>Entry</b>收回 775 = 转正 Gamma，波动被压住，偏多更舒服</div>
+        <div><b>Stop</b>失守 772 后下看预期下沿 767.5；CTA 760.69 只认收盘</div>
+        <div><b>Target</b>775 → 776（预期上沿）</div>
+      </div>
+    </div>
+
+    <div class="card flagged">
+      <h2>QQQ <span class="price">收 728.00 · −0.13%</span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain（10/16 档）</div><div class="metric-value">全链 732 / ±20档 734</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">740.8（现价 −1.73%）</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">730 / 725</div>
+        <div class="metric-label">10/16 Gamma 峰</div><div class="metric-value">730（call、put 同档）</div>
+        <div class="metric-label">预期波幅（10/16）</div><div class="metric-value">±0.91% → 721.38–734.62</div>
+        <div class="metric-label">CTA 最近触发位</div><div class="metric-value">716.20（−1.62%，三信号全多，敞口 +0.62）</div>
+        <div class="metric-label">P/C Vol / OI</div><div class="metric-value">1.11 / 1.47</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">33.6%（IV 22.7%，HV30 16.4%）</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:33%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 740.8</span><span>正Gamma(抑制)</span></div>
+      <div class="flag-note">🔴 730 是今天的锚：Call Wall，也是当天 call 和 put 两边 Gamma 最集中的一档，现价差 0.27%。Max Pain 732–734 在现价上方，到期引力向上，但被 730 的 Call Wall 压着。翻转点 740.8 在预期上沿 734.6 之外，今天回不到正 Gamma，仍是放大环境，跌破 725 Put Wall 会加速。</div>
+      <div class="notes">
+        <div><b>Entry</b>730 附近来回，不在 734 以上追</div>
+        <div><b>Stop</b>跌破 Put Wall 725 → 预期下沿 721.4；CTA 716.20 只认收盘</div>
+        <div><b>Target</b>732–734（Max Pain / 预期上沿）</div>
+      </div>
+    </div>
+
+    <div class="card flagged">
+      <h2>HOOD <span class="price">收 103.99 · +2.88%</span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain（10/16 档）</div><div class="metric-value">107（两种算法一致）</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">103.8（现价 +0.18%）</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">110 / 105</div>
+        <div class="metric-label">10/16 Gamma 峰</div><div class="metric-value">105（call、put 同档）</div>
+        <div class="metric-label">预期波幅（10/16）</div><div class="metric-value">±3.05% → 100.82–107.16</div>
+        <div class="metric-label">P/C Vol / OI</div><div class="metric-value">0.45 / 0.72</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">44.2%（IV 70.0%，HV30 57.3%）</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:52%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 103.8</span><span>过渡区</span></div>
+      <div class="flag-note">🔴 现价就踩在翻转点上（+0.18%），环境随时可能切换。Put Wall 105 在现价上方，又是当天两边的 Gamma 峰，是今天最近的磁铁；Max Pain 107 几乎就在预期上沿 107.2，到期引力向上。10/16 这一档占它 Gamma 的 41%。前提同 9/18：HOOD 以散户买 call 为主（P/C Vol 0.45），做市商未必是净多 Gamma，结构结论要打折。</div>
+      <div class="notes">
+        <div><b>Entry</b>站稳 103.8 上方、向 105 靠拢才考虑</div>
+        <div><b>Stop</b>跌破 Flip 103.8 = 进入负 Gamma；预期下沿 100.8</div>
+        <div><b>Target</b>105 → 107（Max Pain / 预期上沿）</div>
+      </div>
+    </div>
+
+    <div class="card flagged">
+      <h2>COIN <span class="price">收 183.81 · +6.32%</span></h2>
+      <div class="metric-grid">
+        <div class="metric-label">Max Pain（10/16 档）</div><div class="metric-value">177.5（两种算法一致）</div>
+        <div class="metric-label">Gamma Flip Point</div><div class="metric-value">173.0（现价 +6.25%）</div>
+        <div class="metric-label">Call Wall / Put Wall</div><div class="metric-value">185 / 180</div>
+        <div class="metric-label">10/16 Gamma 峰</div><div class="metric-value">call 185 / put 180</div>
+        <div class="metric-label">预期波幅（10/16）</div><div class="metric-value">±3.28% → 177.78–189.84</div>
+        <div class="metric-label">P/C Vol / OI</div><div class="metric-value">0.64 / 0.86</div>
+        <div class="metric-label">IV Rank</div><div class="metric-value">43.9%（IV 70.6%，HV30 63.1%）</div>
+      </div>
+      <div class="gamma-bar"><div class="gamma-marker" style="left:97%;"></div></div>
+      <div class="gamma-caption"><span>负Gamma(放大)</span><span>Flip 173.0</span><span>正Gamma(抑制)</span></div>
+      <div class="flag-note">🔴 全组到期最敏感：10/16 这一档占 COIN 全部 Gamma 的 56%，收盘后结构会大换血。今天是 180–185 的箱体，两条线分别是 Put / Call Wall，也是当天两边的 Gamma 峰。Max Pain 177.5 落在预期下沿 177.8 附近，要走满整个预期波幅才够得着。昨天 +6.32% 是动能行情，加密票不太尊重期权结构（同 HOOD 的前提）。</div>
+      <div class="notes">
+        <div><b>Entry</b>不追开盘；回踩 180 企稳再看</div>
+        <div><b>Stop</b>跌破 180 → 177.5–177.8（Max Pain / 预期下沿）</div>
+        <div><b>Target</b>185（Call Wall）；站上后预期上沿 189.8</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="method">
+    <h2>口径说明</h2>
+    <ol>
+      <li><b>本期起 Flip / Call Wall / Put Wall 用 moomoo 持仓量自算</b>，方法跟盘前「机械资金位」那张表一致：≤180 天全链，call 记正、put 记负，按 Black-Scholes 在假想价位重算 Gamma 求翻转点；墙 = Gamma×持仓量最大的行权价。9/22 已跟 Barchart 对过数，自算的好处是不会用到前一个交易日的持仓量。</li>
+      <li><b>Max Pain</b> 两种算法都列：全链，以及只算现价上下 20 档（Barchart 的默认口径）。两者不一样时，说明赔付曲线底部是平的，应当把 Max Pain 读成一段区域。</li>
+      <li><b>10/16 Gamma 峰</b> = 当天到期这一档里 Gamma×持仓量最大的行权价，call 和 put 分开取。到期当天 Gamma 集中在平值附近，这基本就是最可能被「钉住」的价位。</li>
+      <li><b>预期波幅</b> = 10/15 收盘时 10/16 平值跨式（call + put）的价格，按收盘价在相邻两档之间插值。</li>
+      <li><b>CTA</b>（只算 SPY / QQQ）：21/63/252 日收益方向等权 × 10% 目标波动 ÷ 20 日已实现波动，上限 2 倍；触发位只认收盘。这是教学模型，应当读成一片区域。</li>
+      <li>取数时间是美东 10/16 00:30。持仓量是取数当时 moomoo 显示的数，10/15 收盘后的持仓变化可能要到隔夜才完全更新；需要的话开盘前再重跑一次。</li>
+    </ol>
+  </div>
+
+  <footer>
+    本报告数据源：moomoo API（本地 OpenD）。仅供个人研究参考，不构成投资建议。生成时间：2026-10-16 新加坡时间中午（美股盘前）。
+  </footer>
+
+</div>
+</body>
+</html>
